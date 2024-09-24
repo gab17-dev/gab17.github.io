@@ -34,11 +34,11 @@
 
         def calculate_grades(event):
             try:
-                absences = int(document.getElementById("absences").value)  # Corrected line
-                prelim_exam = float(document.getElementById("prelim_exam").value)  # Corrected line
-                quizzes = float(document.getElementById("quizzes").value)  # Corrected line
-                requirements = float(document.getElementById("requirements").value)  # Corrected line
-                recitation = float(document.getElementById("recitation").value)  # Corrected line
+                absences = int(document.getElementById("absences").value)
+                prelim_exam = float(document.getElementById("prelim_exam").value)
+                quizzes = float(document.getElementById("quizzes").value)
+                requirements = float(document.getElementById("requirements").value)
+                recitation = float(document.getElementById("recitation").value)
 
                 # Input Validation
                 if not (0 <= absences and 0 <= prelim_exam <= 100 and 0 <= quizzes <= 100 and 0 <= requirements <= 100 and 0 <= recitation <= 100):
@@ -75,7 +75,8 @@
             except ValueError:
                 document["results"].innerHTML = "<p style='color:red;'>Invalid input. Please enter valid numbers.</p>"
 
-        document["grade-form"].bind("submit", calculate_grades)
+        # Attach to button (instead of form)
+        document["grade-form"]["submit"].bind("click", calculate_grades) 
 
         # Start Brython
         window.onload = lambda e: brython() 
