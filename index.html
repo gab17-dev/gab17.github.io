@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grade Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3.11.0/brython_stdlib.js"></script>
+</head>
+<body>
+    <h1>Grade Calculator</h1>
+    <form id="grade-form">
+        <label for="absences">Number of Absences:</label>
+        <input type="number" id="absences" name="absences" required><br><br>
+
+        <label for="prelim_exam">Prelim Exam Grade:</label>
+        <input type="number" id="prelim_exam" name="prelim_exam" required><br><br>
+
+        <label for="quizzes">Quizzes Grade:</label>
+        <input type="number" id="quizzes" name="quizzes" required><br><br>
+
+        <label for="requirements">Requirements Grade:</label>
+        <input type="number" id="requirements" name="requirements" required><br><br>
+
+        <label for="recitation">Recitation Grade:</label>
+        <input type="number" id="recitation" name="recitation" required><br><br>
+
+        <button type="submit">Calculate</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script type="text/python">
+        from browser import document, window, html
+
+        def calculate_grades(event):
+            try:
+                absences = int(document["absences"].value)
+                prelim_exam = float(document["prelim_exam"].value)
+                quizzes = float(document["quizzes"].value)
+                requirements = float(document["requirements"].value)
+                recitation = float(document["recitation"].value)
+
+                # Input Validation
+                if not (0 <= absences and 0 <= prelim_exam <= 100 and 0 <= quizzes <= 100 and 0 <= requirements <= 100 and 0 <= recitation <= 100):
+                    document["results"].innerHTML = "<p style='color:red;'>Invalid input. Please ensure all grades are between 0 and 100 and absences are 0 or greater.</p>"
+                    return
+
+                # Attendance Calculation
+                attendance = 100 - (absences * 10)
+                if absences >= 4:
+                    document["results"].innerHTML = "<p style='color:red;'>FAILED</p><p>Attendance: " + str(attendance) + "</p>"
+                    return
+
+                # Class Standing Calculation
+                class_standing = (quizzes * 0.4) + (requirements * 0.3) + (recitation * 0.3)
+
+                # Prelim Grade Calculation
+                prelim_grade = (prelim_exam * 0.6) + (attendance * 0.1) + (class_standing * 0.3)
+
+                # Target Midterm and Final Grades
+                midterm_target_pass = ((75 - (prelim_grade * 0.2)) - (0.5 * 100)) / 0.3
+                final_target_pass = ((75 - (prelim_grade * 0.2)) - (0.3 * 100)) / 0.5
+                midterm_target_dean = ((90 - (prelim_grade * 0.2)) - (0.5 * 100)) / 0.3
+                final_target_dean = ((90 - (prelim_grade * 0.2)) - (0.3 * 100)) / 0.5
+
+                document["results"].innerHTML = """
+                    <h2>Results:</h2>
+                    <p>Prelim Grade: {}</p>
+                    <p>Target Midterm Grade to Pass (75%): {}</p>
+                    <p>Target Final Grade to Pass (75%): {}</p>
+                    <p>Target Midterm Grade to be Dean's Lister (90%): {}</p>
+                    <p>Target Final Grade to be Dean's Lister (90%): {}</p>
+                """.format(prelim_grade, midterm_target_pass, final_target_pass, midterm_target_dean, final_target_dean)
+
+            except ValueError:
+                document["results"].innerHTML = "<p style='color:red;'>Invalid input. Please enter valid numbers.</p>"
+
+        document["grade-form"].bind("submit", calculate_grades)
+
+        # Start Brython
+        window.onload = lambda e: brython() 
+    </script>
+</body>
+</html>
