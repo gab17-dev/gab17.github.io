@@ -34,11 +34,11 @@
 
         def calculate_grades(event):
             try:
-                absences = int(document["absences"].value)
-                prelim_exam = float(document["prelim_exam"].value)
-                quizzes = float(document["quizzes"].value)
-                requirements = float(document["requirements"].value)
-                recitation = float(document["recitation"].value)
+                absences = int(document.getElementById("absences").value)  # Corrected line
+                prelim_exam = float(document.getElementById("prelim_exam").value)  # Corrected line
+                quizzes = float(document.getElementById("quizzes").value)  # Corrected line
+                requirements = float(document.getElementById("requirements").value)  # Corrected line
+                recitation = float(document.getElementById("recitation").value)  # Corrected line
 
                 # Input Validation
                 if not (0 <= absences and 0 <= prelim_exam <= 100 and 0 <= quizzes <= 100 and 0 <= requirements <= 100 and 0 <= recitation <= 100):
